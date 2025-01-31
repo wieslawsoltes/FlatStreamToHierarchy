@@ -1,30 +1,16 @@
-﻿<controls:MetroWindow x:Class="FlatStreamToHierarchy.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window x:Class="FlatStreamToHierarchy.MainWindow"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModels="clr-namespace:FlatStreamToHierarchy.ViewModels"
-        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-
-    
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel, IsDesignTimeCreatable=False}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-                      mc:Ignorable="d"
+        mc:Ignorable="d"
         Title="Recursive Tree Using Dynamic Data" Height="600" Width="525" >
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.TreeView.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.button.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/FlatStreamToHierarchy;component/Themes/TreeView.xaml" />
-
-            </ResourceDictionary.MergedDictionaries>
-
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <Canvas x:Key="appbar_github" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
                 <Path  Canvas.Left="3.27222" Canvas.Top="14.3263" 
@@ -37,37 +23,19 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <controls:MetroWindow.LeftWindowCommands>
-        <controls:WindowCommands>
-            <StackPanel Orientation="Horizontal">
-                <Button 
-                    Command ="{Binding ShowInGitHubCommand}"
-                    ToolTip="Dynamic Data on GitHub">
-                    <Rectangle Width="22"
-                           Height="22"
-                           Fill="White">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Uniform"
-                                     Visual="{StaticResource appbar_github}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-            </StackPanel>
-
-        </controls:WindowCommands>
-    </controls:MetroWindow.LeftWindowCommands>
-
-    <Grid>
         <TreeView 
+            Grid.Column="1" 
             ItemsSource="{Binding EmployeeViewModels}"
             DataContext="{Binding Employees }"  >
-            <TreeView.Resources>
-                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MetroTreeViewItem}">
+            <TreeView.Styles>
+                <Style Selector="TreeViewItem">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </Style>
-
-                <HierarchicalDataTemplate DataType="{x:Type viewModels:EmployeeViewModel}" ItemsSource="{Binding Inferiors}">
+            </TreeView.Styles>
+            <TreeView.DataTemplates>
+                
+                <TreeDataTemplate DataType="{x:Type viewModels:EmployeeViewModel}" ItemsSource="{Binding Inferiors}">
                     <Grid Margin="4" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -94,42 +62,41 @@
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
 
-                            <StackPanel.Resources>
-                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                            <StackPanel.Styles>
+                                <Style Selector="Button">
                                     <Setter Property="Margin" Value="2 0 0 0"/>
                                     <Setter Property="Padding" Value="1"/>
                                     <Setter Property="HorizontalAlignment" Value="Right"/>
                                 </Style>
-                            </StackPanel.Resources>
+                            </StackPanel.Styles>
 
-                            <Button Visibility="{Binding  IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    ToolTip="Promote"
+                            <Button IsVisible="{Binding  IsSelected}"
+                                    ToolTip.Tip="Promote"
                                     
                                     Command="{Binding PromoteCommand}">
 
                                 <Canvas Width="24" Height="24">
                                     <Path
                                         Data="M14,20H10V11L6.5,14.5L4.08,12.08L12,4.16L19.92,12.08L17.5,14.5L14,11V20Z"
-                                        Fill="{DynamicResource AccentSelectedColorBrush}" />
+                                        Fill="{DynamicResource TreeViewItemForegroundSelected}" />
                                 </Canvas>
                             </Button>
 
-                            <Button Visibility="{Binding  IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    ToolTip="Sack"
+                            <Button IsVisible="{Binding  IsSelected}"
+                                    ToolTip.Tip="Sack"
                                     Command="{Binding SackCommand}">
-
                                 <Viewbox Width="24" Height="24" Margin="2 0 0 0">
                                     <Canvas Width="24" Height="24">
                                         <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                				        Fill="{StaticResource AccentSelectedColorBrush}"/>
+                				        Fill="{DynamicResource TreeViewItemForegroundSelected}"/>
                                     </Canvas>
                                 </Viewbox>
                             </Button>
                         </StackPanel>
                     </Grid>
-                </HierarchicalDataTemplate>
-            </TreeView.Resources>
+                </TreeDataTemplate>
+            </TreeView.DataTemplates>
 
         </TreeView>
-    </Grid>
-</controls:MetroWindow>
+
+</Window>

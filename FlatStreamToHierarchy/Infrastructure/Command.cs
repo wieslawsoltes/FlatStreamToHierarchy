@@ -26,15 +26,16 @@ namespace FlatStreamToHierarchy.Infrastructure
             _execute();
         }
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+        public event EventHandler CanExecuteChanged;
+        // public event EventHandler CanExecuteChanged
+        // {
+        //     add => CommandManager.RequerySuggested += value;
+        //     remove => CommandManager.RequerySuggested -= value;
+        // }
 
         public void Refresh()
         {
-            CommandManager.InvalidateRequerySuggested();
+            // CommandManager.InvalidateRequerySuggested();
         }
     }
 }
